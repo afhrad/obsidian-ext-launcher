@@ -52,7 +52,7 @@ export class ScriptModalBuilder extends Modal {
 		headerEl.setText(this.script.name);
 
 		// eslint-disable-next-line @typescript-eslint/no-misused-promises
-		headerEl.addEventListener("click", async (ev) => {
+		headerEl.addEventListener("click", async () => {
 			try {
 				const newName: string = await GenericInputPrompt.Prompt(
 					this.app,

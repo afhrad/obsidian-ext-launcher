@@ -1,5 +1,5 @@
 <script lang="ts">
-	import {faTrash, faClone, faEdit, faRunning, faPlay} from "@fortawesome/free-solid-svg-icons";
+	import {faTrash, faClone, faEdit, faPlay} from "@fortawesome/free-solid-svg-icons";
 	import Icon from "svelte-awesome/components/Icon.svelte";
 	import {createEventDispatcher} from "svelte";
 
