@@ -60,7 +60,7 @@ export class ScriptExecutor implements IScriptExecutor {
 		//---------------------------------------------------------------------------
 		// Building the commandline
 		//---------------------------------------------------------------------------
-		let command = JSON.stringify(script.externalProgram);
+		let command = JSON.stringify(this.expandTilde(script.externalProgram));
 		let commandArguments: string[] = [];
 
 		for (let arg of script.additional_args) {
@@ -79,7 +79,7 @@ export class ScriptExecutor implements IScriptExecutor {
 			} else if (arg.template === "json_struct") {
 				commandArguments.push("'" + JSON.stringify(this.obsidianData) + "'");
 			} else {
-				commandArguments.push(JSON.stringify(arg.argument));
+				commandArguments.push(JSON.stringify(this.expandTilde(arg.argument)));
 			}
 		}
 		let fullCommand = `${command} ${commandArguments.join(" ")}`;
