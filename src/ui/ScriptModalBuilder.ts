@@ -99,7 +99,7 @@ export class ScriptModalBuilder extends Modal {
 			.addText((text) => {
 				text.setValue(this.script.externalProgram);
 				text.setPlaceholder("External Program");
-				text.onChange((value) => {
+				text.onChange(() => {
 					this.script.externalProgram = text.getValue();
 				});
 			});
@@ -131,7 +131,7 @@ export class ScriptModalBuilder extends Modal {
 						text.inputEl.addClass("argument-full-width");
 						text.setValue(this.script.additional_args[index].argument);
 						text.setPlaceholder("Argument");
-						text.onChange((value) => {
+						text.onChange(() => {
 							this.script.additional_args[index].argument = text.getValue();
 						});
 					});
@@ -151,9 +151,8 @@ export class ScriptModalBuilder extends Modal {
 								index,
 								index - 1
 							);
-							this.plugin.saveSettings().then(r => {
-								this.display();
-							});
+							this.plugin.saveSettings();
+							this.display();
 						});
 				})
 					.addExtraButton((cb) => {
@@ -165,9 +164,8 @@ export class ScriptModalBuilder extends Modal {
 									index,
 									index + 1
 								);
-								this.plugin.saveSettings().then(r => {
-									this.display();
-								});
+								this.plugin.saveSettings();
+								this.display();
 							});
 					})
 					.addExtraButton((cb) => {
@@ -178,9 +176,8 @@ export class ScriptModalBuilder extends Modal {
 									index,
 									1
 								);
-								this.plugin.saveSettings().then(r => {
-									this.display();
-								});
+								this.plugin.saveSettings();
+								this.display();
 							});
 					});
 				s.infoEl.remove();
@@ -207,10 +204,11 @@ export class ScriptModalBuilder extends Modal {
 	private addCurrentWorkingDir(): void {
 		new Setting(this.contentEl)
 			.setName("Working Dir")
+			.setDesc("Full Path to the working directory ('~' expands to home).")
 			.addText((text) => {
 				text.setValue(this.script.currentWorkingDirectory);
 				text.setPlaceholder("Working Directory");
-				text.onChange((value) => {
+				text.onChange(() => {
 					this.script.currentWorkingDirectory = text.getValue();
 				});
 			});
