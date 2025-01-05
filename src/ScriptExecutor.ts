@@ -53,6 +53,7 @@ export class ScriptExecutor implements IScriptExecutor {
 			this.obsidianData.editorY = editor.getCursor().line;
 		}
 
+		script.externalProgram = this.expandTilde(script.externalProgram);
 		if (!fs.existsSync(script.externalProgram)) {
 			console.error(`The external program ${script.externalProgram} does not exist.`);
 			return;
@@ -60,7 +61,7 @@ export class ScriptExecutor implements IScriptExecutor {
 		//---------------------------------------------------------------------------
 		// Building the commandline
 		//---------------------------------------------------------------------------
-		let command = JSON.stringify(this.expandTilde(script.externalProgram));
+		let command = JSON.stringify(script.externalProgram);
 		let commandArguments: string[] = [];
 
 		for (let arg of script.additional_args) {
