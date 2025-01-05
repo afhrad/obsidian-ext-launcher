@@ -136,7 +136,7 @@ Code will be in [examples/Java/ObsidianTest](./examples/Java/ObsidianTest)
           "template": "argument"
         },
         {
-          "argument": "<working dir>/Projects/Java/ObsidianTest/out/production/ObsidianTest",
+          "argument": "~/Projects/Java/ObsidianTest/out/production/ObsidianTest",
           "template": "argument"
         },
         {
@@ -152,7 +152,7 @@ Code will be in [examples/Java/ObsidianTest](./examples/Java/ObsidianTest)
           "template": "filename_no_ext"
         }
       ],
-      "externalProgram": "<userdir>/Library/Java/JavaVirtualMachines/openjdk-23/Contents/Home/bin/java",
+      "externalProgram": "~/Library/Java/JavaVirtualMachines/openjdk-23/Contents/Home/bin/java",
       "insert_handling": "none",
       "currentWorkingDirectory": "~/Projects/Java/ObsidianTest/out/production/ObsidianTest",
       "debug_output": true
