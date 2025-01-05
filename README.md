@@ -122,7 +122,7 @@ Code will be in [examples/Python/obsidian_test](./examples/Python/obsidian_test)
 ```
 
 ### Java example
-Code will be in [examples/Java/obsidian_test](./examples/Java/obsidian_test)
+Code will be in [examples/Java/ObsidianTest](./examples/Java/ObsidianTest)
 
 >Please update all paths according to your environment. I use the openjdk-23 in the example and compile it with IntelliJ IDEA.
 
