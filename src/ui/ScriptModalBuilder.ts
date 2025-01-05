@@ -21,7 +21,7 @@ export class ScriptModalBuilder extends Modal {
 			this.rejectPromise = reject;
 		});
 
-		this.containerEl.addClass("quickAddModal");
+		this.containerEl.addClass("scriptAddModal");
 		this.open();
 
 		this.display();
@@ -47,7 +47,7 @@ export class ScriptModalBuilder extends Modal {
 
 	protected addCenteredChoiceNameHeader(): void {
 		const headerEl: HTMLHeadingElement = this.contentEl.createEl("h2", {
-			cls: "choiceNameHeader",
+			cls: "scriptHeader",
 		});
 		headerEl.setText(this.script.name);
 

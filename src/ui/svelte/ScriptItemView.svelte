@@ -40,8 +40,8 @@
 	}
 </script>
 
-<div class="choiceListItem">
-	<span class="choiceListItemName" bind:this={nameElement} />
+<div class="scriptListItem">
+	<span class="scriptListItemName" bind:this={nameElement} />
 
 	<ScriptRightButtons
 		on:deleteScript={deleteScript}
@@ -51,4 +51,15 @@
 	/>
 </div>
 
-<style></style>
+<style>
+	.scriptListItem {
+		display: flex;
+		font-size: 16px;
+		align-items: center;
+		margin: 0 0 0 0;
+		transition: 1000ms ease-in-out;
+	}
+	.scriptListItemName {
+		flex: 1 0 0;
+	}
+</style>

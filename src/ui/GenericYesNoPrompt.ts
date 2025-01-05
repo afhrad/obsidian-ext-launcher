@@ -34,7 +34,7 @@ export default class GenericYesNoPrompt extends Modal {
 	}
 
 	private display() {
-		this.containerEl.addClass("quickAddModal", "qaYesNoPrompt");
+		this.containerEl.addClass("scriptAddModal", "qaYesNoPrompt");
 		this.contentEl.empty();
 		this.titleEl.textContent = this.header;
 		this.contentEl.createEl("p", { text: this.text });

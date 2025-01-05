@@ -56,6 +56,7 @@ export class ScriptExecutor implements IScriptExecutor {
 		script.externalProgram = this.expandTilde(script.externalProgram);
 		if (!fs.existsSync(script.externalProgram)) {
 			console.error(`The external program ${script.externalProgram} does not exist.`);
+			new Notice(`The external program ${script.externalProgram} does not exist.`);
 			return;
 		}
 		//---------------------------------------------------------------------------
