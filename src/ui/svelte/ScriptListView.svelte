@@ -1,8 +1,8 @@
 <script lang="ts">
-	import type {IScript} from "../../model/IScript";
 	import ScriptItemView from "./ScriptItemView.svelte";
+	import type {Script} from "../../Script";
 
-	export let scripts: IScript[] = [];
+	export let scripts: Script[] = [];
 
 </script>
 

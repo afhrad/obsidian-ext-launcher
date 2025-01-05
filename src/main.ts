@@ -1,8 +1,8 @@
 import {FileSystemAdapter, Plugin} from 'obsidian';
 import {DEFAULT_SETTINGS, SettingsTab, type IScriptLauncherSettings} from "./SettingsTab";
 import {settingsStore} from "./settingsStore";
-import type {IScript} from "./model/IScript";
-import {ScriptExecutor} from "./model/ScriptExecutor";
+import {ScriptExecutor} from "./ScriptExecutor";
+import type {Script} from "./Script";
 
 export default class ScriptLauncherPlugin extends Plugin {
 	settings: IScriptLauncherSettings;
@@ -39,7 +39,7 @@ export default class ScriptLauncherPlugin extends Plugin {
 		await this.saveData(this.settings);
 	}
 
-	public addCommandForScript(script: IScript) {
+	public addCommandForScript(script: Script) {
 		this.addCommand({
 			id: `scriptlauncher:script:${script.id}`,
 			name: script.name,
@@ -49,7 +49,7 @@ export default class ScriptLauncherPlugin extends Plugin {
 		});
 	}
 
-	public removeCommandForScript(script: IScript) {
+	public removeCommandForScript(script: Script) {
 		this.removeCommand(`scriptlauncher:script:${script.id}`);
 	}
 

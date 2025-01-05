@@ -108,8 +108,8 @@ export default class GenericInputPrompt extends Modal {
 		buttonBarContainer.style.gap = "0.5rem";
 	}
 
-	private submitClickCallback = (evt: MouseEvent) => this.submit();
-	private cancelClickCallback = (evt: MouseEvent) => this.cancel();
+	private submitClickCallback = () => this.submit();
+	private cancelClickCallback = () => this.cancel();
 
 	private submitEnterCallback = (evt: KeyboardEvent) => {
 		if (!evt.isComposing && evt.key === "Enter") {

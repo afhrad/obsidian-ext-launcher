@@ -1,12 +1,12 @@
 import type {App} from "obsidian";
 import {PluginSettingTab, Setting} from "obsidian";
-import type {IScript} from "./model/IScript";
 import { settingsStore } from "./settingsStore";
 import ScriptView from "./ui/svelte/ScriptView.svelte";
 import type ScriptLauncherPlugin from "./main";
+import type {Script} from "./Script";
 
 export interface IScriptLauncherSettings {
-	scripts: IScript[];
+	scripts: Script[];
 }
 
 export const DEFAULT_SETTINGS: IScriptLauncherSettings = {
@@ -41,7 +41,7 @@ export class SettingsTab extends PluginSettingTab {
 				app: this.app,
 				plugin: this.plugin,
 				scripts: settingsStore.getState().scripts,
-				saveScripts: (scripts: IScript[]) => {
+				saveScripts: (scripts: Script[]) => {
 					settingsStore.setState({ scripts });
 				},
 			},

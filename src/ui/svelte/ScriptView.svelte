@@ -1,19 +1,18 @@
 <script lang="ts">
-	import {CursorPlacement, type IScript} from "../../model/IScript";
 	import {App} from "obsidian";
 	import {onMount} from "svelte";
 	import ScriptListView from "./ScriptListView.svelte";
 	import GenericYesNoPrompt from "../GenericYesNoPrompt";
 	import {settingsStore} from "../../settingsStore";
 	import ScriptAddButton from "./ScriptAddButton.svelte";
-	import {Script} from "../../model/Script";
+	import {CursorPlacement,Script} from "../../Script";
 	import {ScriptModalBuilder} from "../ScriptModalBuilder";
 	import ScriptLauncherPlugin from "../../main";
-	import {ScriptExecutor} from "../../model/ScriptExecutor";
+	import {ScriptExecutor} from "../../ScriptExecutor";
 
-	export let scripts: IScript[] = [];
+	export let scripts: Script[] = [];
 
-	export let saveScripts: (scripts: IScript[]) => void;
+	export let saveScripts: (scripts: Script[]) => void;
 	export let app: App;
 	export let plugin: ScriptLauncherPlugin;
 
@@ -37,13 +36,13 @@
 	}
 
 	async function handleRunScript(e: any) {
-		const script: IScript = e.detail.script;
+		const script: Script = e.detail.script;
 		script.insert_handling = CursorPlacement.None;
 		await new ScriptExecutor(app, plugin).execute(script);
 	}
 
 	async function handleDeleteScript(e: any) {
-		const script: IScript = e.detail.script;
+		const script: Script = e.detail.script;
 		const userConfirmed: boolean = await GenericYesNoPrompt.Prompt(
 			app,
 			`Delete Script?`,
@@ -62,7 +61,7 @@
 	async function handleConfigureScript(e: any) {
 		const {script: oldScript} = e.detail;
 
-		let updatedScript: IScript | null = null;
+		let updatedScript: Script | null = null;
 		const builder = new ScriptModalBuilder(
 			app,
 			oldScript,
@@ -87,15 +86,15 @@
 
 	function handleAddScript(event: any): void {
 		const {name} = event.detail;
-		const newscript: IScript = new Script(name);
+		const newscript: Script = new Script(name);
 		scripts = [...scripts, newscript];
 		plugin.addCommandForScript(newscript);
 		saveScripts(scripts);
 	}
 
 
-	function duplicateScriptHelper(script: IScript) {
-		let newScript: IScript = new Script(`${script.name} (copy)`);
+	function duplicateScriptHelper(script: Script) {
+		let newScript: Script = new Script(`${script.name} (copy)`);
 		newScript.insert_handling = script.insert_handling;
 		newScript.debug_output = script.debug_output;
 		newScript.externalProgram = script.externalProgram;
@@ -104,11 +103,11 @@
 		return newScript;
 	}
 
-	function deleteScriptHelper(id: string, value: IScript): boolean {
+	function deleteScriptHelper(id: string, value: Script): boolean {
 		return value.id !== id;
 	}
 
-	function updateScriptHelper(oldScript: IScript, newScript: IScript) {
+	function updateScriptHelper(oldScript: Script, newScript: Script) {
 		if (oldScript.id === newScript.id) {
 			oldScript = {...oldScript, ...newScript};
 			return oldScript;

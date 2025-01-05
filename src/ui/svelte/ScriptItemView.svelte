@@ -2,9 +2,9 @@
 	import { createEventDispatcher } from "svelte";
 	import { Component, htmlToMarkdown, MarkdownRenderer } from "obsidian";
 	import ScriptRightButtons from "./ScriptActionButtons.svelte";
-	import type {IScript} from "../../model/IScript";
+	import type {Script} from "../../Script";
 
-	export let script: IScript;
+	export let script: Script;
 	const dispatcher = createEventDispatcher();
 
 	function deleteScript() {

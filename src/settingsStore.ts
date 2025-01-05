@@ -1,8 +1,7 @@
 import { createStore } from "zustand/vanilla";
 import type {IScriptLauncherSettings} from "./SettingsTab";
 import { DEFAULT_SETTINGS } from "./SettingsTab";
-import type { IScript } from "./model/IScript";
-import {Script} from "./model/Script";
+import {Script} from "./Script";
 
 type SettingsState = IScriptLauncherSettings;
 
@@ -17,7 +16,7 @@ export const settingsStore = (() => {
 		getState,
 		setState,
 		subscribe,
-		setScript: (scriptId: IScript["id"], script: IScript) => {
+		setScript: (scriptId: Script["id"], script: Script) => {
 			setState((state) => {
 				const scriptIdx = state.scripts.findIndex((m) => m.id === scriptId);
 				if (scriptIdx === -1) {
@@ -40,6 +39,7 @@ export const settingsStore = (() => {
 			}
 
 			const script = new Script(name);
+			// @ts-ignore
 			setState((state) => ({
 				...state,
 				scripts: [...state.scripts, script],
@@ -47,7 +47,7 @@ export const settingsStore = (() => {
 
 			return script;
 		},
-		getScript: (scriptId: IScript["id"]) => {
+		getScript: (scriptId: Script["id"]) => {
 			return getState().scripts.find((m) => m.id === scriptId);
 		},
 	};

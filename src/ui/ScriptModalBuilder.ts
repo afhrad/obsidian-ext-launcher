@@ -1,22 +1,22 @@
-import {ArgumentTemplate, CursorPlacement, type IScript} from "../model/IScript";
 import {type App, type ButtonComponent, Modal, Setting} from "obsidian";
 import ScriptLauncherPlugin from "../main";
 import type {SvelteComponent} from "svelte";
 import GenericInputPrompt from "./GenericInputPrompt";
+import {ArgumentTemplate, CursorPlacement, type Script } from "../Script";
 
 export class ScriptModalBuilder extends Modal {
-	private resolvePromise: (input: IScript) => void;
+	private resolvePromise: (input: Script) => void;
 	private rejectPromise: (reason?: unknown) => void;
-	private input: IScript;
-	public waitForClose: Promise<IScript>;
+	private input: Script;
+	public waitForClose: Promise<Script>;
 	private didSubmit = false;
 	protected svelteElements: SvelteComponent[] = [];
-	script: IScript;
+	script: Script;
 
-	constructor(app: App, script: IScript, private plugin: ScriptLauncherPlugin) {
+	constructor(app: App, script: Script, private plugin: ScriptLauncherPlugin) {
 		super(app);
 		this.script = script;
-		this.waitForClose = new Promise<IScript>((resolve, reject) => {
+		this.waitForClose = new Promise<Script>((resolve, reject) => {
 			this.resolvePromise = resolve;
 			this.rejectPromise = reject;
 		});
@@ -113,8 +113,8 @@ export class ScriptModalBuilder extends Modal {
 					.addDropdown((dd) => {
 						dd.addOption(ArgumentTemplate.Argument, "Argument");
 						dd.addOption(ArgumentTemplate.VaultPath, "Vault Path");
-						dd.addOption(ArgumentTemplate.Filename, "Filename without Extension");
-						dd.addOption(ArgumentTemplate.FilenameExt, "Filename with Extension");
+						dd.addOption(ArgumentTemplate.Filename, "Filename with Extension");
+						dd.addOption(ArgumentTemplate.FilenameNoExt, "Filename without Extension");
 						dd.addOption(ArgumentTemplate.FilenameRel, "Relative Filename in Vault");
 						dd.addOption(ArgumentTemplate.FilenameFull, "Full Filename in Vault");
 						dd.addOption(ArgumentTemplate.JSONStruct, "Obsidian Internal Parameters");

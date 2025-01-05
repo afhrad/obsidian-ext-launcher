@@ -1,20 +1,33 @@
 import {type App, MarkdownView, Notice} from "obsidian";
-import type {IScriptExecutor} from "./IScriptExecutor";
-import type ScriptLauncherPlugin from "../main";
-import {CursorPlacement, type IScript, type ObsidianData} from "./IScript";
+import type ScriptLauncherPlugin from "./main";
 import * as path from 'path';
 import * as fs from 'fs';
 import {exec} from 'child_process';
+import {CursorPlacement, type Script, type ObsidianData} from "./Script";
+import * as os from "os";
+
+export interface IScriptExecutor {
+	execute(script: Script): Promise<void>;
+	obsidianData: ObsidianData;
+}
 
 export class ScriptExecutor implements IScriptExecutor {
 	constructor(private app: App, private plugin: ScriptLauncherPlugin) {
 	}
 
 	obsidianData: ObsidianData = {
-		editorX: 0, editorY: 0, filename: "", filenameExt: "", filenameFull: "", filenameRel: "", vaultPath: ""
+		editorX: 0, editorY: 0, filename: "", filenameNoExt: "", filenameFull: "", filenameRel: "", vaultPath: ""
 	}
 
-	async execute(script: IScript): Promise<void> {
+	expandTilde(filePath: string): string {
+		if (!filePath || filePath[0] !== '~') {
+			return filePath;
+		}
+		const homeDir = os.homedir();
+		return path.join(homeDir, filePath.slice(1));
+	}
+
+	async execute(script: Script): Promise<void> {
 		if (script.debug_output) {
 			console.log(`Executing script: ${script.name}`);
 		}
@@ -28,7 +41,7 @@ export class ScriptExecutor implements IScriptExecutor {
 		}
 		if ( this.app.workspace.getActiveFile() && this.app.workspace.getActiveFile()?.path ) {
 			this.obsidianData.filename = path.basename(<string>this.app.workspace.getActiveFile()?.path?.toString());
-			this.obsidianData.filenameExt = path.parse(this.obsidianData.filename).name
+			this.obsidianData.filenameNoExt = path.parse(this.obsidianData.filename).name
 		}
 		this.obsidianData.filenameFull = path.join(this.obsidianData.vaultPath, this.obsidianData.filenameRel);
 
@@ -44,10 +57,6 @@ export class ScriptExecutor implements IScriptExecutor {
 			console.error(`The external program ${script.externalProgram} does not exist.`);
 			return;
 		}
-
-		if ( script.debug_output ) {
-			console.log(this.obsidianData)
-		}
 		//---------------------------------------------------------------------------
 		// Building the commandline
 		//---------------------------------------------------------------------------
@@ -57,60 +66,63 @@ export class ScriptExecutor implements IScriptExecutor {
 		for (let arg of script.additional_args) {
 			if (arg.template === "vault_path") {
 				commandArguments.push(JSON.stringify(this.obsidianData.vaultPath));
-				if (script.debug_output) {
-					console.log(`Vault path: ${this.obsidianData.vaultPath}`);
-				}
 			} else if (arg.template === "filename") {
 				commandArguments.push(JSON.stringify(this.obsidianData.filename));
-				if (script.debug_output) {
-					console.log(`Filename: ${path.basename(this.obsidianData.filename)}`);
-				}
-			} else if (arg.template === "filename_ext") {
-				commandArguments.push(JSON.stringify(this.obsidianData.filenameExt));
-				if (script.debug_output) {
-					console.log(`Filename withour extension: ${this.obsidianData.filenameExt}`);
-				}
+			} else if (arg.template === "filename_no_ext") {
+				commandArguments.push(JSON.stringify(this.obsidianData.filenameNoExt));
 			} else if (arg.template === "filename_rel") {
 				if (this.obsidianData.filenameRel != null) {
 					commandArguments.push(JSON.stringify(this.obsidianData.filenameRel));
-					if (script.debug_output) {
-						console.log(`Relative filename: ${this.obsidianData.filenameRel}`);
-					}
 				}
 			} else if (arg.template === "filename_full") {
 				commandArguments.push(JSON.stringify(this.obsidianData.filenameFull));
-				if (script.debug_output) {
-					console.log(`Full filename: ${this.obsidianData.filenameFull}`);
-				}
 			} else if (arg.template === "json_struct") {
 				commandArguments.push("'" + JSON.stringify(this.obsidianData) + "'");
-				if (script.debug_output) {
-					console.log(`JSON struct: '${this.obsidianData}'`);
-				}
 			} else {
 				commandArguments.push(JSON.stringify(arg.argument));
-				if (script.debug_output) {
-					console.log(`Additional argument: ${arg.argument}`);
-				}
 			}
 		}
 		let fullCommand = `${command} ${commandArguments.join(" ")}`;
-		if (script.debug_output) {
-			console.log(`Full command: ${fullCommand}`);
-		}
+		let debugInformation = ""
 		//---------------------------------------------------------------------------
 		// Execute the command
 		//---------------------------------------------------------------------------
-		exec(fullCommand, { cwd: script.currentWorkingDirectory }, (error: any, stdout: any, stderr: any) => {
+		const startTime = performance.now();
+		const workingDirectory = this.expandTilde(script.currentWorkingDirectory);
+		debugInformation += `Command: ${command}\n`
+		debugInformation += `Full command: ${fullCommand}\n`
+		debugInformation += `Working directory: ${workingDirectory}\n`
+		debugInformation += "Obsidian Data Struct: " + JSON.stringify(this.obsidianData, null, 2) + "\n"
+		for (let arg of commandArguments) {
+			debugInformation += `- Argument: "${arg}"\n`
+		}
+
+		exec(fullCommand, { cwd: workingDirectory }, (error: any, stdout: any, stderr: any) => {
+			const endTime = performance.now();
+			const executionTime = endTime - startTime;
+
+			const formatTime = (time: number) => {
+				const milliseconds = Math.floor(time % 1000);
+				const seconds = Math.floor((time / 1000) % 60);
+				const minutes = Math.floor((time / (1000 * 60)) % 60);
+				const hours = Math.floor((time / (1000 * 60 * 60)) % 24);
+
+				return `${hours}h ${minutes}m ${seconds}s ${milliseconds}ms`;
+			};
+
+			const formattedExecutionTime = formatTime(executionTime);
+			debugInformation += `Executiontime: ${formattedExecutionTime}\n\n`;
 			if (error) {
 				console.log(`Error executing script ${script.name}: ${error}`)
 				new Notice(`!!! Script ` + script.name + ` not executed successfully`);
+				debugInformation += `Error: ${error}`;
+				if (script.debug_output) {
+					console.log(debugInformation);
+				}
 				return;
 			} else {
-				if (script.debug_output) {
-					console.log(`stdout: ${stdout}`);
-					console.log(`stderr: ${stderr}`);
-				}
+				debugInformation += `stdout:\n ${stdout}\n`
+				debugInformation += `stderr:\n ${stderr}\n`
 				if (script.insert_handling == CursorPlacement.Start || script.insert_handling == CursorPlacement.End) {
 					editor.replaceRange(stdout,
 						{
@@ -128,6 +140,9 @@ export class ScriptExecutor implements IScriptExecutor {
 							ch: this.obsidianData.editorX + stdout.length
 						});
 					}
+				}
+				if (script.debug_output) {
+					console.log(debugInformation);
 				}
 				new Notice(`Script ` + script.name + ` executed successfully`);
 			}
