@@ -194,9 +194,8 @@ export class ScriptModalBuilder extends Modal {
 						argument: "",
 						template: ArgumentTemplate.Argument
 					});
-					this.plugin.saveSettings().then(r => {
-						this.display();
-					});
+					this.plugin.saveSettings();
+					this.display();
 				});
 		});
 	}
