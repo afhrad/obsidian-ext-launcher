@@ -1,24 +1,35 @@
 {
-	"name": "obsidian-sample-plugin",
+	"name": "obsidian-ext-launcher",
 	"version": "1.0.0",
-	"description": "This is a sample plugin for Obsidian (https://obsidian.md)",
-	"main": "main.js",
+	"description": "",
+	"main": "dist/index.js",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
 		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
 		"version": "node version-bump.mjs && git add manifest.json versions.json"
 	},
-	"keywords": [],
-	"author": "",
-	"license": "MIT",
+	"dependencies": {
+		"uuid": "^11.0.3",
+		"zustand": "^4.3.8"
+	},
 	"devDependencies": {
+		"@fortawesome/free-regular-svg-icons": "6.4.0",
+		"@fortawesome/free-solid-svg-icons": "6.4.0",
 		"@types/node": "^16.11.6",
 		"@typescript-eslint/eslint-plugin": "5.29.0",
 		"@typescript-eslint/parser": "5.29.0",
 		"builtin-modules": "3.3.0",
 		"esbuild": "0.17.3",
+		"esbuild-svelte": "^0.9.0",
 		"obsidian": "latest",
 		"tslib": "2.4.0",
-		"typescript": "4.7.4"
-	}
+		"typescript": "^5.5.3",
+		"svelte": "4.2.19",
+		"svelte-awesome": "3.3.5",
+		"svelte-check": "^4.1.1",
+		"svelte-dnd-action": "0.9.53",
+		"svelte-preprocess": "^6.0.3"
+
+	},
+	"private": true
 }
