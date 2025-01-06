@@ -1,6 +1,5 @@
 import {type App, type ButtonComponent, Modal, Setting} from "obsidian";
 import ScriptLauncherPlugin from "../main";
-import type {SvelteComponent} from "svelte";
 import GenericInputPrompt from "./GenericInputPrompt";
 import {ArgumentTemplate, CursorPlacement, type Script } from "../Script";
 
@@ -10,7 +9,6 @@ export class ScriptModalBuilder extends Modal {
 	private input: Script;
 	public waitForClose: Promise<Script>;
 	private didSubmit = false;
-	protected svelteElements: SvelteComponent[] = [];
 	script: Script;
 
 	constructor(app: App, script: Script, private plugin: ScriptLauncherPlugin) {
@@ -21,14 +19,9 @@ export class ScriptModalBuilder extends Modal {
 			this.rejectPromise = reject;
 		});
 
-		this.containerEl.addClass("scriptAddModal");
+		this.containerEl.addClass("addModal");
 		this.open();
 
-		this.display();
-	}
-
-	protected reload() {
-		this.contentEl.empty();
 		this.display();
 	}
 
@@ -65,7 +58,6 @@ export class ScriptModalBuilder extends Modal {
 					headerEl.setText(newName);
 				}
 			} catch (e) {
-				console.log(`No new name given for ${this.script.name}`);
 			}
 		});
 	}
@@ -73,10 +65,6 @@ export class ScriptModalBuilder extends Modal {
 	onClose() {
 		super.onClose();
 		this.resolvePromise(this.script);
-		this.svelteElements.forEach((el) => {
-			if (el && el.$destroy) el.$destroy();
-		});
-
 		if (!this.didSubmit) this.rejectPromise("No answer given.");
 		else this.resolvePromise(this.input);
 	}
@@ -94,11 +82,11 @@ export class ScriptModalBuilder extends Modal {
 
 	private addExternalProgram(): void {
 		new Setting(this.contentEl)
-			.setName("External Program")
-			.setDesc("Full Path to the Program.")
+			.setName("External program/script")
+			.setDesc("Full path to the program/script.")
 			.addText((text) => {
 				text.setValue(this.script.externalProgram);
-				text.setPlaceholder("External Program");
+				text.setPlaceholder("External program/script");
 				text.onChange(() => {
 					this.script.externalProgram = text.getValue();
 				});
@@ -108,16 +96,17 @@ export class ScriptModalBuilder extends Modal {
 	addArguments(): void {
 		new Setting(this.contentEl).setName("Additional Arguments").setHeading();
 		this.script.additional_args.forEach(
-			(argument, index) => {
+			(_argument, index) => {
 				const s = new Setting(this.contentEl)
 					.addDropdown((dd) => {
 						dd.addOption(ArgumentTemplate.Argument, "Argument");
-						dd.addOption(ArgumentTemplate.VaultPath, "Vault Path");
-						dd.addOption(ArgumentTemplate.Filename, "Filename with Extension");
-						dd.addOption(ArgumentTemplate.FilenameNoExt, "Filename without Extension");
-						dd.addOption(ArgumentTemplate.FilenameRel, "Relative Filename in Vault");
-						dd.addOption(ArgumentTemplate.FilenameFull, "Full Filename in Vault");
-						dd.addOption(ArgumentTemplate.JSONStruct, "Obsidian Internal Parameters");
+						dd.addOption(ArgumentTemplate.VaultPath, "Vault path");
+						dd.addOption(ArgumentTemplate.Filename, "Filename with extension");
+						dd.addOption(ArgumentTemplate.FilenamePath, "Full path to the file");
+						dd.addOption(ArgumentTemplate.FilenameNoExt, "Filename without extension");
+						dd.addOption(ArgumentTemplate.FilenameRel, "Relative filename in vault");
+						dd.addOption(ArgumentTemplate.FilenameFull, "Full filename in vault");
+						dd.addOption(ArgumentTemplate.JSONStruct, "Obsidian internal parameter JSON object");
 						dd.setValue(this.script.additional_args[index].template);
 						dd.onChange(async (value) => {
 							this.script.additional_args[index].template = <ArgumentTemplate>value;
@@ -206,7 +195,7 @@ export class ScriptModalBuilder extends Modal {
 			.setDesc("Full Path to the working directory ('~' expands to home).")
 			.addText((text) => {
 				text.setValue(this.script.currentWorkingDirectory);
-				text.setPlaceholder("Working Directory");
+				text.setPlaceholder("Working directory");
 				text.onChange(() => {
 					this.script.currentWorkingDirectory = text.getValue();
 				});
@@ -215,7 +204,7 @@ export class ScriptModalBuilder extends Modal {
 
 	private addDebugOutput(): void {
 		new Setting(this.contentEl)
-			.setName("Debug Execution Details On Console")
+			.setName("Debug execution details in separate log window")
 			.addToggle((toggleComponent) => {
 				toggleComponent
 					.setValue(this.script.debug_output.valueOf())

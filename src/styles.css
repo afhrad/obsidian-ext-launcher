@@ -1,4 +1,4 @@
-.scriptAddModal .modal {
+.addModal .modal {
 	min-width: 55%;
 	overflow-y: auto;
 	max-height: 70%;
@@ -8,12 +8,39 @@
 	width: 100%;
 }
 
+.monospaced-content {
+	font-family: monospace;
+}
+
+.full-width-setting {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+}
+
+.full-width-setting .setting-item-control {
+	width: 100%;
+}
+
 .argument-disabled {
 	border: none !important;
 
 }
 
-.scriptHeader {
+.header-icon {
+	width: 32px;
+	height: 32px;
+	margin-right: 8px;
+}
+
+.logHeader {
+	display: flex;
+	align-items: center;
+	text-align: center;
+	font-size: larger;
+}
+
+.modalHeader {
 	text-align: center;
 }
 

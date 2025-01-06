@@ -4,6 +4,7 @@ export enum ArgumentTemplate {
 	Argument = "argument",
 	VaultPath = "vault_path",
 	Filename = "filename",
+	FilenamePath = "filename_path",
 	FilenameNoExt = "filename_no_ext",
 	FilenameRel = "filename_rel",
 	FilenameFull = "filename_full",
@@ -18,6 +19,7 @@ export enum CursorPlacement {
 export interface ObsidianData {
 	vaultPath: string;
 	filename: string;
+	filenamePath: string;
 	filenameNoExt: string;
 	filenameRel: string;
 	filenameFull: string;

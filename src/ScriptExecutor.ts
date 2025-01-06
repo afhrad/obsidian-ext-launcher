@@ -5,6 +5,7 @@ import * as fs from 'fs';
 import {exec} from 'child_process';
 import {CursorPlacement, type Script, type ObsidianData} from "./Script";
 import * as os from "os";
+import {LogViewer} from "./ui/LogViewer";
 
 export interface IScriptExecutor {
 	execute(script: Script): Promise<void>;
@@ -16,7 +17,7 @@ export class ScriptExecutor implements IScriptExecutor {
 	}
 
 	obsidianData: ObsidianData = {
-		editorX: 0, editorY: 0, filename: "", filenameNoExt: "", filenameFull: "", filenameRel: "", vaultPath: ""
+		editorX: 0, editorY: 0, filename: "", filenameNoExt: "", filenameFull: "", filenameRel: "", vaultPath: "", filenamePath: ""
 	}
 
 	expandTilde(filePath: string): string {
@@ -28,10 +29,6 @@ export class ScriptExecutor implements IScriptExecutor {
 	}
 
 	async execute(script: Script): Promise<void> {
-		if (script.debug_output) {
-			console.log(`Executing script: ${script.name}`);
-		}
-
 		//---------------------------------------------------------------------------
 		// Collect all Obsidian Settings for the script
 		//---------------------------------------------------------------------------
@@ -44,6 +41,7 @@ export class ScriptExecutor implements IScriptExecutor {
 			this.obsidianData.filenameNoExt = path.parse(this.obsidianData.filename).name
 		}
 		this.obsidianData.filenameFull = path.join(this.obsidianData.vaultPath, this.obsidianData.filenameRel);
+		this.obsidianData.filenamePath = path.dirname(this.obsidianData.filenameFull);
 
 		const editor = this.app.workspace.getActiveViewOfType(MarkdownView)?.editor;
 		if (!editor) {
@@ -55,7 +53,6 @@ export class ScriptExecutor implements IScriptExecutor {
 
 		script.externalProgram = this.expandTilde(script.externalProgram);
 		if (!fs.existsSync(script.externalProgram)) {
-			console.error(`The external program ${script.externalProgram} does not exist.`);
 			new Notice(`The external program ${script.externalProgram} does not exist.`);
 			return;
 		}
@@ -70,6 +67,8 @@ export class ScriptExecutor implements IScriptExecutor {
 				commandArguments.push(JSON.stringify(this.obsidianData.vaultPath));
 			} else if (arg.template === "filename") {
 				commandArguments.push(JSON.stringify(this.obsidianData.filename));
+			} else if (arg.template === "filename_path") {
+				commandArguments.push(JSON.stringify(this.obsidianData.filenamePath));
 			} else if (arg.template === "filename_no_ext") {
 				commandArguments.push(JSON.stringify(this.obsidianData.filenameNoExt));
 			} else if (arg.template === "filename_rel") {
@@ -107,19 +106,22 @@ export class ScriptExecutor implements IScriptExecutor {
 				const milliseconds = Math.floor(time % 1000);
 				const seconds = Math.floor((time / 1000) % 60);
 				const minutes = Math.floor((time / (1000 * 60)) % 60);
-				const hours = Math.floor((time / (1000 * 60 * 60)) % 24);
-
-				return `${hours}h ${minutes}m ${seconds}s ${milliseconds}ms`;
+				return `${minutes}m ${seconds}s ${milliseconds}ms`;
 			};
 
 			const formattedExecutionTime = formatTime(executionTime);
 			debugInformation += `Executiontime: ${formattedExecutionTime}\n\n`;
 			if (error) {
-				console.log(`Error executing script ${script.name}: ${error}`)
 				new Notice(`!!! Script ` + script.name + ` not executed successfully`);
 				debugInformation += `Error: ${error}`;
 				if (script.debug_output) {
-					console.log(debugInformation);
+					new LogViewer(
+						this.app,
+						true,
+						formattedExecutionTime,
+						debugInformation,
+						this.plugin
+					);
 				}
 				return;
 			} else {
@@ -143,10 +145,16 @@ export class ScriptExecutor implements IScriptExecutor {
 						});
 					}
 				}
-				if (script.debug_output) {
-					console.log(debugInformation);
-				}
 				new Notice(`Script ` + script.name + ` executed successfully`);
+				if (script.debug_output) {
+					new LogViewer(
+						this.app,
+						false,
+						formattedExecutionTime,
+						debugInformation,
+						this.plugin
+					);
+				}
 			}
 		});
 

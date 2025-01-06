@@ -46,7 +46,7 @@ export default class GenericInputPrompt extends Modal {
 	}
 
 	private display() {
-		this.containerEl.addClass("scriptAddModal", "qaInputPrompt");
+		this.containerEl.addClass("addModal", "qaInputPrompt");
 		this.contentEl.empty();
 		this.titleEl.textContent = this.header;
 

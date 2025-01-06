@@ -3,7 +3,7 @@
 	"name": "External Launcher",
 	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
-	"description": "Launches external programs, scripts, etc from obsidian with arguments",
+	"description": "Launches external programs, scripts, etc. from Obsidian with arguments.",
 	"author": "Thorsten Sommermann",
 	"authorUrl": "https://github.com/afhrad",
 	"isDesktopOnly": true
