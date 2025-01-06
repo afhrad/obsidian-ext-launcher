@@ -1,9 +1,9 @@
 {
-	"id": "obsidian-ext-launch",
+	"id": "ext-launcher",
 	"name": "External Launcher",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"minAppVersion": "0.15.0",
-	"description": "Launches external programs, scripts, etc. from Obsidian with arguments.",
+	"description": "Launches external programs, scripts, etc. with arguments.",
 	"author": "Thorsten Sommermann",
 	"authorUrl": "https://github.com/afhrad",
 	"isDesktopOnly": true
