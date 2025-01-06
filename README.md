@@ -8,7 +8,7 @@ For the sake of simplicity, I will use the term "script" to refer to both script
 
 - **Execute External Programs**: Run any external program or script with specified arguments.
 - **Dynamic Argument Handling**: Supports various argument templates such as vault path, filename, filename without extension, relative filename, full filename, and JSON structure of Obsidian data.
-- **Debug Output**: Option to enable detailed debug output, including the command executed, working directory, and execution time.
+- **Debug Output**: Option to enable detailed debug output in a separate window, including the command executed, working directory, and execution time.
 - **Insert Handling**: Control where the output of the executed script is inserted in the active editor (cursor position, or not at all).
 - **Execution Time Measurement**: Measures and formats the execution time of the script in a human-readable format.
 
@@ -24,17 +24,18 @@ For the sake of simplicity, I will use the term "script" to refer to both script
 - Add any number of arguments in the `Additional Arguments` field. You can use the argument templates to insert dynamic values.
   - Templates are:
     - _Argument_: Normal manual argument to be passed to the script
-    - _Vault Path_: The path to the vault (comes from Obsidian)
-    - _Filename with Extension_: The name of the file with the extension
-    - _Filename without Extension_: The name of the file without the extension
-    - _Relative Filename_: The path to the file relative to the vault
-    - _Full Filename_: The full path to the file
-    - _Obsidian Data_: A JSON structure of the Obsidian data (containing everything from above and more like cursor positions)
+    - _Vault path_: The path to the vault (comes from Obsidian)
+    - _Filename with extension_: The name of the file with the extension
+    - _Filename without extension_: The name of the file without the extension
+    - _Relative filename_: The path to the file relative to the vault
+    - _Full filename_: The full path to the file
+    - _Full filename in vault_: The full path to the file
+    - _Obsidian internal parameter JSON object_: A JSON structure of the Obsidian data (containing everything from above and more like cursor positions)
 - Determine how the plugins handles the output of the script:
   - _Insert at Cursor_: Inserts the output at the cursor position in the active editor
   - _Replace Selection_: Replaces the selected text in the active editor with the output
   - _Do Nothing_: Does not insert the output anywhere
-- Debug Output: Enable this option to see detailed debug output in the console (useful for troubleshooting). Open the Obsidian devleopment console for this.
+- Debug Output: Enable this option to see detailed debug output in a separate modal window (useful for troubleshooting).
 - Save the script and close the options page.
 
 ![Edit Script](./images/script.png)
@@ -61,6 +62,7 @@ It is completely up to you how to use this plugin. Here are some examples:
 - Run a script to get additional information from your system or from the internet and insert it into the current note
 - Syncing your notes with an external system (tasks, events, time spent, etc.)
 - Call a REST service and insert the result into the current note.
+- Scrape some data from a website and insert it into the current note.
 
 
 ## Warning
@@ -77,7 +79,7 @@ I learned a lot from mainly three plugins I found extremely helpful:
 - [Templater](https://github.com/SilentVoid13/Templater) by [SilentVoid13](https://github.com/SilentVoid13)
   - where I learned to manage the dynamic arguments.
 
-So without them, this plugin would not have been possible. Thank you!
+So without them, this plugin would not have been possible. Thank you for showing me the way!
 
 ## Support
 This is the first plugin I've ever written for Obsidian and there may be many features to come. I have not tested it with the Windows version, as I have no Window PC at home. Should be ok with Mac / Linux. Desktop versions only
