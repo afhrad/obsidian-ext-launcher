@@ -119,8 +119,7 @@ export class ScriptExecutor implements IScriptExecutor {
 						this.app,
 						true,
 						formattedExecutionTime,
-						debugInformation,
-						this.plugin
+						debugInformation
 					);
 				}
 				return;
@@ -151,8 +150,7 @@ export class ScriptExecutor implements IScriptExecutor {
 						this.app,
 						false,
 						formattedExecutionTime,
-						debugInformation,
-						this.plugin
+						debugInformation
 					);
 				}
 			}

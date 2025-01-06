@@ -1,6 +1,5 @@
 import {type App, Modal, Setting} from "obsidian";
-import ScriptLauncherPlugin from "../main";
-import {faCheckCircle, faInfoCircle, faWarning} from "@fortawesome/free-solid-svg-icons";
+import {faCheckCircle, faWarning} from "@fortawesome/free-solid-svg-icons";
 import Icon from "svelte-awesome/components/Icon.svelte";
 
 export class LogViewer extends Modal {
@@ -9,7 +8,7 @@ export class LogViewer extends Modal {
 	executionTime: string;
 	isError: boolean;
 
-	constructor(app: App, isError:boolean, executionTime:string, logContent: string, private plugin: ScriptLauncherPlugin) {
+	constructor(app: App, isError:boolean, executionTime:string, logContent: string ) {
 		super(app);
 		this.logContent = logContent;
 		this.executionTime = executionTime;
