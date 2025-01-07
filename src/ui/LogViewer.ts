@@ -61,7 +61,6 @@ export class LogViewer extends Modal {
 			.addTextArea((cb) => {
 				cb.inputEl.addClass("argument-full-width", "monospaced-content");
 				cb.setValue(this.logContent);
-				cb.inputEl.style.height = "50vh";
 			})
 			.settingEl.addClass("full-width-setting");
 	}

@@ -66,7 +66,7 @@ export default class GenericInputPrompt extends Modal {
 	) {
 		const textComponent = new TextComponent(container);
 
-		textComponent.inputEl.style.width = "100%";
+		textComponent.inputEl.className="inputFieldWidth"
 		textComponent
 			.setPlaceholder(placeholder ?? "")
 			.setValue(value ?? "")
@@ -94,18 +94,14 @@ export default class GenericInputPrompt extends Modal {
 			buttonBarContainer,
 			"Ok",
 			this.submitClickCallback
-		).setCta().buttonEl.style.marginRight = "0";
+		).setCta().buttonEl.className="okButtonMargin";
 		this.createButton(
 			buttonBarContainer,
 			"Cancel",
 			this.cancelClickCallback
 		);
 
-		buttonBarContainer.style.display = "flex";
-		buttonBarContainer.style.flexDirection = "row-reverse";
-		buttonBarContainer.style.justifyContent = "flex-start";
-		buttonBarContainer.style.marginTop = "1rem";
-		buttonBarContainer.style.gap = "0.5rem";
+		buttonBarContainer.className = "buttonBarContainer"
 	}
 
 	private submitClickCallback = () => this.submit();

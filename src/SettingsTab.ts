@@ -33,7 +33,7 @@ export class SettingsTab extends PluginSettingTab {
 	private addScriptTableView(): void {
 		const setting = new Setting(this.containerEl);
 		setting.infoEl.remove();
-		setting.settingEl.style.display = "block";
+		setting.settingEl.className = "scriptTableView";
 
 		this.scriptView = new ScriptView({
 			target: setting.settingEl,
